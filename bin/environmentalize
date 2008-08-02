@@ -1,0 +1,56 @@
+#!/bin/bash
+# environmentalize
+# Author: John Trupiano
+
+# I put a variable in my scripts named PROGNAME which
+# holds the name of the program being run.  You can get this
+# value from the first item on the command line ($0).
+PROGNAME=$(basename $0)
+CWD=$(pwd)
+
+function usage {
+  # Display usage message on standard error
+  echo "Usage: $PROGNAME file" 1>&2
+}
+
+function clean_up {
+  # Perform program exit housekeeping
+  # Optionally accepts an exit status
+
+  exit $1
+}
+
+function add_user {
+  if ! cat /etc/passwd | cut -d":" -f1 | grep $1; then
+    echo "Creating $1 user"
+    adduser $1
+  else
+    echo "User $1 already exists"
+  fi
+}
+
+function error_exit {
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+trap clean_up SIGHUP SIGINT SIGTERM
+
+
+cd config && mkdir demo development production staging test \
+  || error_exit "Failed to create environment subdirectories"
+  
+for env in (development production test)
+do
+  cp environments/$env.rb $env/environment.rb \
+    || error_exit "Failed to copy environment file $env"
+end
+
+cp environemnts/production.rb staging/environment.rb
+cp environments/production.rb demo/environment.rb
+
+cp $GEM_HOME/environmentalist-0.1.0/conf/postboot.rb config/postboot.rb
+mv config/environments.rb config/environments.rb.bak
+sed -e "s:/require File.join(File.dirname(__FILE__), 'boot'):require File.join(File.dirname(__FILE__), 'boot')\n\n#Load postboot file to change Rails paths\nrequire File.join(File.dirname(__FILE__), 'postboot')" \
+  config/environments.rb.old > config/environments.rb
+
