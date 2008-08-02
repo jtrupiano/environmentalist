@@ -6,7 +6,7 @@ class RailsVersionTest < Test::Unit::TestCase
   
   def test_rails_two_one_zero
     cp_r('rails210', 'rails210test')
-    system("cd rails210test && environmentalize")
+    system("environmentalize rails210test")
     
     config_root = File.join('rails210test', 'config')
     

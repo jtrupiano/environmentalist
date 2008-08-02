@@ -1,56 +1,82 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 # environmentalize
 # Author: John Trupiano
 
-# I put a variable in my scripts named PROGNAME which
-# holds the name of the program being run.  You can get this
-# value from the first item on the command line ($0).
-PROGNAME=$(basename $0)
-CWD=$(pwd)
+require 'fileutils'
+include FileUtils
 
-function usage {
-  # Display usage message on standard error
-  echo "Usage: $PROGNAME file" 1>&2
-}
+require 'yaml'
 
-function clean_up {
-  # Perform program exit housekeeping
-  # Optionally accepts an exit status
+rails_root = ARGV[0] || '.'
+puts "rails_root: #{rails_root}"
+config_base = File.join(rails_root, 'config')
+old_env_dir = File.join(config_base, 'environments')
 
-  exit $1
-}
-
-function add_user {
-  if ! cat /etc/passwd | cut -d":" -f1 | grep $1; then
-    echo "Creating $1 user"
-    adduser $1
-  else
-    echo "User $1 already exists"
-  fi
-}
-
-function error_exit {
-  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
-  exit 1
-}
-
-trap clean_up SIGHUP SIGINT SIGTERM
-
-
-cd config && mkdir demo development production staging test \
-  || error_exit "Failed to create environment subdirectories"
-  
-for env in (development production test)
-do
-  cp environments/$env.rb $env/environment.rb \
-    || error_exit "Failed to copy environment file $env"
+%w(demo development production staging test).each do |env|
+  dir = File.join(config_base, env)
+	if !File.directory?(dir)
+		puts "mkdir -p #{dir}"
+		mkdir_p dir
+	end
+	old_env_file = File.join(old_env_dir, "#{env}.rb")
+	if File.exists?(old_env_file)
+	  new_env_file = File.join(dir, "environment.rb")
+	  puts "mv #{old_env_file} #{new_env_file}"
+	  mv(old_env_file, new_env_file)
+	end
 end
 
-cp environemnts/production.rb staging/environment.rb
-cp environments/production.rb demo/environment.rb
+# Copy production for these guys if it wasn't already found
+%w(demo staging).each do |env|
+  new_env_file = File.join(config_base, env, "environment.rb")
+  prod_env_file = File.join(config_base, "production", "environment.rb")
+  if !File.exists?(new_env_file)
+    puts "cp #{prod_env_file} #{new_env_file}"
+    cp(prod_env_file, new_env_file)
+  end
+end
 
-cp $GEM_HOME/environmentalist-0.1.0/conf/postboot.rb config/postboot.rb
-mv config/environments.rb config/environments.rb.bak
-sed -e "s:/require File.join(File.dirname(__FILE__), 'boot'):require File.join(File.dirname(__FILE__), 'boot')\n\n#Load postboot file to change Rails paths\nrequire File.join(File.dirname(__FILE__), 'postboot')" \
-  config/environments.rb.old > config/environments.rb
+#cp $GEM_HOME/environmentalist-0.1.0/conf/postboot.rb config/postboot.rb
+postboot = File.join(config_base, "postboot.rb")
+if !File.exists?(postboot)
+  gem_postboot = File.dirname(__FILE__) + '/../lib/conf/postboot.rb'
+  puts "cp #{gem_postboot} #{postboot}"
+  cp(gem_postboot, postboot)
+end
 
+main_env_file = File.join(config_base, "environment.rb")
+env_contents = File.open(main_env_file).read
+if !env_contents.include?("require File.join(File.dirname(__FILE__), 'postboot')")
+  
+  contents = <<-CONTENTS
+#Load postboot file to change Rails paths
+require File.join(File.dirname(__FILE__), 'postboot')
+
+Rails::Initializer.run do |config|
+  CONTENTS
+  
+  env_contents.sub!("Rails::Initializer.run do |config|", contents)
+  File.open(main_env_file, 'w') {|f| f.write(env_contents) }
+end
+
+if File.directory?(old_env_dir)
+  puts "Removing #{old_env_dir}"
+  rm_rf(old_env_dir)
+end
+
+# Handle database.yml now
+old_db_yml = File.join(config_base, 'database.yml')
+if File.exists?(old_db_yml)
+  y = YAML.load_file(old_db_yml)
+  %w(demo development production staging test).each do |env|
+    new_db_yml = File.join(config_base, env, 'database.yml')
+    if !File.exists?(new_db_yml)
+      if !y[env].nil?
+        puts "Writing #{new_db_yml}"
+        File.open(new_db_yml, 'w') {|f| f. write(y[env].to_yaml) }
+      end
+    end
+  end
+  puts "Removing #{old_db_yml}"
+  rm_f(old_db_yml)
+end
