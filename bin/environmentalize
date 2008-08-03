@@ -49,7 +49,7 @@ env_contents = File.open(main_env_file).read
 if !env_contents.include?("require File.join(File.dirname(__FILE__), 'postboot')")
   
   contents = <<-CONTENTS
-#Load postboot file to change Rails paths
+# Load postboot file to change Rails paths
 require File.join(File.dirname(__FILE__), 'postboot')
 
 Rails::Initializer.run do |config|
@@ -73,7 +73,9 @@ if File.exists?(old_db_yml)
     if !File.exists?(new_db_yml)
       if !y[env].nil?
         puts "Writing #{new_db_yml}"
-        File.open(new_db_yml, 'w') {|f| f. write(y[env].to_yaml) }
+        # remove all other keys
+        y_dup = y.reject {|key, value| key != env}
+        File.open(new_db_yml, 'w') {|f| f. write(y_dup.to_yaml) }
       end
     end
   end
