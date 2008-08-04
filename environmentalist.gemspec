@@ -11,6 +11,4 @@ Gem::Specification.new do |s|
   
   s.files = Dir.glob("{lib}/**/*") + Dir['bin/*'] + %w(README)
   s.executables = %w(environmentalize)
-  
-  s.add_dependency(%q<rails>, ['>= 2.0.2'])
 end
