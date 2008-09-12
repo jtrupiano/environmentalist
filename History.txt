@@ -1,0 +1,4 @@
+=== v0.1.0
+2008-08-04
+
+* Initial Release: environmentalize executable will make environments first-class citizens in your rails app!
