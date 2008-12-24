@@ -6,20 +6,9 @@ env_dir  = File.join(RAILS_ROOT, 'config', rails_env)
 db_file  = File.join(env_dir, 'database.yml')
 env_file = File.join(env_dir, 'environment.rb')
 
-unless File.exists?(env_dir)
-  puts "#{env_dir} environment directory cannot be found."
-  exit(1)
-end
-
-unless File.exists?(db_file)
-	puts "#{db_file} is missing.  You cannot continue without this."
-	exit(1) # exit with an error code
-end
-
-unless File.exists?(env_file)
-  puts "#{env_file} environment file is missing." 
-  exit(1)
-end
+raise "#{env_dir} environment directory cannot be found." unless File.exists?(env_dir)
+raise "#{db_file} is missing.  You cannot continue without this." unless File.exists?(db_file)
+raise "#{env_file} environment file is missing." unless File.exists?(env_file)
 
 # Now, let's open up Rails and tell it to find our environment files elsewhere.
 module Rails
