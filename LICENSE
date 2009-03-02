@@ -1,24 +1,3 @@
-= environmentalist
-
-* http://github.com/jtrupiano/environmentalist/tree/master
-
-== DESCRIPTION:
-Provides an executable that converts a rails app's config structure.  The basic idea is that environments themselves are now first-class citizens, allowing you to create several environments (e.g. staging, prodtest, demo, etc.) in a clean, organized fashion.  Each environment is given its own folder where it can store its own set of configuration files (think mongrel configs, apache configs, etc.) without polluting the top-leve config/ directory.
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
-
-== REQUIREMENTS:
-
-* none, but it's really only useful with a rails app
-
-== INSTALL:
-
-* sudo gem install environmentalist
-
-== LICENSE:
-
 (The MIT License)
 
 Copyright (c) 2008 FIX
