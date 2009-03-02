@@ -13,7 +13,7 @@ begin
     s.homepage = "http://github.com/jtrupiano/environmentalist"
     s.authors = ["John Trupiano"]
     s.executables = "environmentalize"
-    #s.files =  FileList["[A-Z]*", "{bin,generators,lib,test}/**/*", 'lib/jeweler/templates/.gitignore']
+    s.files =  FileList["[A-Z]*", "{bin,lib,test}/**/*"]
     #s.add_dependency 'schacon-git'
   end
 rescue LoadError

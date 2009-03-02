@@ -36,12 +36,18 @@ end
   end
 end
 
-#cp $GEM_HOME/environmentalist-0.1.0/conf/postboot.rb config/postboot.rb
 postboot = File.join(config_base, "postboot.rb")
 if !File.exists?(postboot)
   gem_postboot = File.dirname(__FILE__) + '/../lib/conf/postboot.rb'
   puts "cp #{gem_postboot} #{postboot}"
   cp(gem_postboot, postboot)
+end
+
+preinitializer = File.join(config_base, "preinitializer.rb")
+if !File.exists?(preinitializer)
+  gem_preinitializer = File.join(File.dirname(__FILE__), '..', 'lib', 'conf', 'preinitializer.rb')
+  puts "cp #{gem_preinitializer} #{preinitializer}"
+  cp(gem_preinitializer, preinitializer)
 end
 
 main_env_file = File.join(config_base, "environment.rb")
