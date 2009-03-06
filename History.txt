@@ -1,3 +1,14 @@
+=== v0.2.1
+2009-03-06
+
+* Add automatic gem install + activation (bug fix for GemInstaller pending) added to preinitializer.rb
+
+=== v0.2.0
+2009-03-02
+
+* Added preinitializer.rb to the set of the generated files for you.  It auto-loads gem dependencies as specified in geminstaller.yml files that can be distributed across your environment directories.
+* Moved gem onto jeweler (with the temporary loss of rubyforge support --- rubyforge integration has been achieved in a fork of the jeweler repo, so we should have it back once it's merged back into the main line.)
+
 === v0.1.0
 2008-08-04
 
