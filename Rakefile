@@ -6,7 +6,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "environmentalist"
-    #s.rubyforge_name = 'johntrupiano' # if different than lowercase project name
+    s.rubyforge_project = 'johntrupiano' # if different than lowercase project name
     s.description = %q(Provides an executable that converts a rails app's config structure.  The basic idea is that environments themselves are now first-class citizens, allowing you to create several environments (e.g. staging, prodtest, demo, etc.) in a clean, organized fashion.  Each environment is given its own folder where it can store its own set of configuration files (think mongrel configs, apache configs, etc.) without polluting the top-leve config/ directory.)
     s.summary = s.description # More details later??
     s.email = "jtrupiano@gmail.com"
