@@ -1,20 +1,20 @@
-h1. environmentalist
+= environmentalist
 
 * http://github.com/jtrupiano/environmentalist/tree/master
 
-h2. DESCRIPTION
+== DESCRIPTION
 
 Provides an executable that converts a rails app's config structure.  The basic idea is that environments themselves are now first-class citizens, allowing you to create several environments (e.g. staging, prodtest, demo, etc.) in a clean, organized fashion.  Each environment is given its own folder where it can store its own set of configuration files (think mongrel configs, apache configs, etc.) without polluting the top-leve config/ directory.
 
-h2. REQUIREMENTS
+== REQUIREMENTS
 
 * none, but it's really only useful with a rails app
 
-h2. INSTALL
+== INSTALL
 
   sudo gem install environmentalist
 
-h2. USAGE
+== USAGE
 
 This gem is intended to be a "one-time consumption."  You use it once to alter/convert the structure of your rails app (works best with a newly-generated app).  It should <b>not</b> be included as a gem dependency for your project.
 
