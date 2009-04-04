@@ -26,7 +26,7 @@ require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   config = YAML.load(File.read('VERSION.yml'))
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "timecop #{config[:major]}.#{config[:minor]}.#{config[:patch]}"
+  rdoc.title = "environmentalist #{config[:major]}.#{config[:minor]}.#{config[:patch]}"
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
