@@ -2,6 +2,8 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+gem 'jeweler', '~> 0.10.2'
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
@@ -20,6 +22,16 @@ rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  config = YAML.load(File.read('VERSION.yml'))
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "timecop #{config[:major]}.#{config[:minor]}.#{config[:patch]}"
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
 begin
   require 'rake/contrib/sshpublisher'
   namespace :rubyforge do
@@ -35,7 +47,7 @@ begin
         )
 
         host = "#{config['username']}@rubyforge.org"
-        remote_dir = "/var/www/gforge-projects/the-perfect-gem/"
+        remote_dir = "/var/www/gforge-projects/johntrupiano/environmentalist"
         local_dir = 'rdoc'
 
         Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
