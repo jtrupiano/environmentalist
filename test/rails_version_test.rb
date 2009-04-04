@@ -16,8 +16,8 @@ class RailsVersionTest < Test::Unit::TestCase
     
     assert File.exists?(File.join(config_root, 'postboot.rb'))
     
-    env_rb = File.open(File.join(config_root, 'environment.rb')).read
-    assert env_rb.include?("require File.join(File.dirname(__FILE__), 'postboot')")
+    boot_rb = File.open(File.join(config_root, 'boot.rb')).read
+    assert boot_rb.include?("require File.join(File.dirname(__FILE__), 'postboot')")
     
     %w(development test demo staging production).each do |env|
       assert File.directory?(File.join(config_root, env))

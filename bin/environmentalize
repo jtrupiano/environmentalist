@@ -50,19 +50,17 @@ if !File.exists?(preinitializer)
   cp(gem_preinitializer, preinitializer)
 end
 
-main_env_file = File.join(config_base, "environment.rb")
-env_contents = File.open(main_env_file).read
-if !env_contents.include?("require File.join(File.dirname(__FILE__), 'postboot')")
+boot_file = File.join(config_base, "boot.rb")
+boot_contents = File.open(boot_file).read
+if !boot_contents.include?("require File.join(File.dirname(__FILE__), 'postboot')")
   
   contents = <<-CONTENTS
 # Load postboot file to change Rails paths
 require File.join(File.dirname(__FILE__), 'postboot')
-
-Rails::Initializer.run do |config|
   CONTENTS
   
-  env_contents.sub!("Rails::Initializer.run do |config|", contents)
-  File.open(main_env_file, 'w') {|f| f.write(env_contents) }
+  boot_contents << contents
+  File.open(boot_file, 'w') {|f| f.write(boot_contents) }
 end
 
 if File.directory?(old_env_dir)
