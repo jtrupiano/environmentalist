@@ -2,7 +2,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-gem 'jeweler', '~> 0.10.2'
+gem 'jeweler', '~> 0.11.1'
 
 begin
   require 'jeweler'

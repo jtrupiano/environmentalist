@@ -3,3 +3,6 @@
 coverage
 rdoc
 pkg
+test/rails210/**/*
+test/rails210test/**/*
+test/rails212/**/*
